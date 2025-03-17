@@ -114,7 +114,7 @@ module Definition =
         Constructor CSSUnparsedValueConstructorType?members
     ]
     |+> Instance [
-        "length" =? T<int> // Read-only property
+        "length" =? T<int> 
 
         "entries" => T<obj>?obj ^-> T<obj>
         "forEach" => CSSUnparsedValueForEachFn?callbackFn * !?T<obj>?thisArg ^-> T<unit>
@@ -133,8 +133,8 @@ module Definition =
             Constructor (!| CSSTransformComponent)?transforms
         ]
         |+> Instance [
-            "length" =? T<int> // Read-only property
-            "is2D" =? T<bool> // Read-only property
+            "length" =? T<int> 
+            "is2D" =? T<bool> 
 
             "toMatrix" => T<unit> ^-> T<DOMMatrix>
             "entries" => T<obj>?obj ^-> T<obj>
@@ -157,15 +157,15 @@ module Definition =
 
         Class "StylePropertyMapReadOnly"
         |+> Instance [
-            "size" =? T<int> // Read-only unsigned long integer
+            "size" =? T<int> 
 
             "entries" => T<unit> ^-> T<obj>
-            "forEach" => (forEachFn?callbackFn * !?T<obj>?thisArg) ^-> T<unit> // Callback with optional thisArg
-            "get" => T<string>?property ^-> CSSStyleValue // Returns a CSSStyleValue or null
-            "getAll" => T<string>?property ^-> !| CSSStyleValue // Returns an array of CSSStyleValue
-            "has" => T<string>?property ^-> T<bool> // Checks if the property exists
-            "keys" => T<unit> ^-> T<Array> // Returns an array iterator of keys
-            "values" => T<unit> ^-> T<Array> // Returns an array iterator of values
+            "forEach" => (forEachFn?callbackFn * !?T<obj>?thisArg) ^-> T<unit> 
+            "get" => T<string>?property ^-> CSSStyleValue 
+            "getAll" => T<string>?property ^-> !| CSSStyleValue 
+            "has" => T<string>?property ^-> T<bool> 
+            "keys" => T<unit> ^-> T<Array> 
+            "values" => T<unit> ^-> T<Array> 
         ]
 
     let AddModuleOptions = 
