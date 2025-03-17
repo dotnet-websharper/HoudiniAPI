@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Houdini CSS Paint API Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Content/WebSharper.Houdini.Sample.css" />
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] { display: none; }
+        /* ✅ Load the Houdini worklet */
+        @property --stripe-color {
+            syntax: "<color>";
+            inherits: false;
+        }
+
+        @property --stripe-width {
+            syntax: "<length>";
+            inherits: false;
+        }
+
+        body {
+            background: paint(striped-background);
+        }
+
+        .box {
+            margin-top: 15px;
+            width: 200px;
+            height: 100px;
+            background: paint(striped-background);
+            --stripe-color: rgb(250,128,114);
+            --stripe-width: 15px;
+        }
+    </style>
+    <script type="module" src="Content/WebSharper.Houdini.Sample.head.js"></script>
+</head>
+<body>
+    <h1>Houdini CSS Paint API Example with custom striped background</h1>
+    <div id="main" ws-children-template="Main">
+        <button ws-onclick="RegisterHoudini">Register Houdini</button>
+        <div id="status">${Status}</div>
+        <div class="box"></div>
+    </div>
+    <script type="module" src="Content/WebSharper.Houdini.Sample.min.js"></script>
+</body>
+</html>
