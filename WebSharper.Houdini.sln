@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.Houdini", "WebSharper.Houdini\WebSharper.Houdini.fsproj", "{02432F4B-31DE-410C-BF5A-3CA644544676}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.Houdini.Sample", "WebSharper.Houdini.Sample\WebSharper.Houdini.Sample.fsproj", "{866CA377-4926-4949-A53A-2830223A18A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02432F4B-31DE-410C-BF5A-3CA644544676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02432F4B-31DE-410C-BF5A-3CA644544676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02432F4B-31DE-410C-BF5A-3CA644544676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02432F4B-31DE-410C-BF5A-3CA644544676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866CA377-4926-4949-A53A-2830223A18A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866CA377-4926-4949-A53A-2830223A18A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866CA377-4926-4949-A53A-2830223A18A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866CA377-4926-4949-A53A-2830223A18A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B249C635-C23B-41F0-8538-A41A96D565C0}
+	EndGlobalSection
+EndGlobal
