@@ -1,109 +1,140 @@
-# WebSharper Houdini API Binding
+# WebSharper.Houdini
 
-This repository provides an F# [WebSharper](https://websharper.com/) binding for the [Houdini API](https://developer.mozilla.org/en-US/docs/Web/Houdini), enabling developers to extend CSS and the rendering engine with custom worklets in WebSharper applications.
+[![NuGet](https://img.shields.io/badge/nuget-not%20published-lightgrey)](https://github.com/dotnet-websharper/HoudiniAPI)
 
-## Repository Structure
+WebSharper bindings for the [Houdini API](https://developer.mozilla.org/en-US/docs/Web/Houdini) —
+extending CSS and the rendering engine with custom worklets from F# and C# web apps.
 
-The repository consists of two main projects:
+Houdini is an experimental technology. Paint worklets require a secure context (HTTPS or localhost), and some
+parts of the API are not available in every browser.
 
-1. **Binding Project**:
+This repository contains:
 
-   - Contains the F# WebSharper binding for the Houdini API.
+| Project | Purpose |
+| --- | --- |
+| `WebSharper.Houdini` | The binding: WIG definitions for `CSS`, `Worklet`, `PaintWorkletGlobalScope`, `StylePropertyMap`, `CSSStyleValue` and its numeric/transform subclasses, and their option dictionaries. |
+| `WebSharper.Houdini.Sample` | An ASP.NET Core SPA that registers a striped-background paint worklet and applies it to a CSS box. |
 
-2. **Sample Project**:
-   - Demonstrates how to use the Houdini API with WebSharper syntax.
-   - Includes a GitHub Pages demo: [View Demo](https://dotnet-websharper.github.io/HoudiniAPI/)
+## Live demos
+
+**Try it live:** [Open the sample in your browser](https://dotnet-websharper.github.io/HoudiniAPI/)
+
+![Houdini CSS Paint API sample](docs/sample.png)
+
+The sample doubles as the binding's test case: it registers a paint worklet and renders the striped background in
+a real browser.
+
+- **Sample (this repository):** <https://dotnet-websharper.github.io/HoudiniAPI/>
+- **Source repository:** <https://github.com/dotnet-websharper/HoudiniAPI>
+- **WebSharper bindings:** <https://websharper.com/bindings>
+
+## Features
+
+- `Worklet.addModule()` to load a paint worklet.
+- `CSS.registerProperty()` for typed custom properties.
+- `PaintWorkletGlobalScope.registerPaint()` for the worklet side.
+- `CSSStyleValue` and its `CSSImageValue`, `CSSKeywordValue`, `CSSNumericValue`, `CSSUnitValue`, `CSSMathSum`, `CSSMathProduct`, `CSSUnparsedValue`, `CSSTransformValue`, and `CSSTransformComponent` subclasses.
+- `StylePropertyMap` and `StylePropertyMapReadOnly` (`get`, `getAll`, `has`, `set`, `append`, `delete`, `clear`, `entries`, `forEach`, `keys`, `values`).
 
 ## Installation
 
-To use this package in your WebSharper project, add the NuGet package:
+The binding is not currently published to NuGet. Reference the projects from source:
 
 ```bash
-   dotnet add package WebSharper.Houdini
+git clone https://github.com/dotnet-websharper/HoudiniAPI.git
 ```
 
-## Building
+```xml
+<ItemGroup>
+  <ProjectReference Include="path/to/WebSharper.Houdini/WebSharper.Houdini.fsproj" />
+</ItemGroup>
+```
 
-### Prerequisites
-
-- [.NET SDK](https://dotnet.microsoft.com/download) installed on your machine.
-
-### Steps
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/dotnet-websharper/Houdini.git
-   cd Houdini
-   ```
-
-2. Build the Binding Project:
-
-   ```bash
-   dotnet build WebSharper.Houdini/WebSharper.Houdini.fsproj
-   ```
-
-3. Build and Run the Sample Project:
-
-   ```bash
-   cd WebSharper.Houdini.Sample
-   dotnet build
-   dotnet run
-   ```
-
-## Example Usage
-
-Below is an example of how to use the Houdini API in a WebSharper project:
+## Usage
 
 ```fsharp
-namespace WebSharper.Houdini.Sample
+namespace WebSharper.Houdini.Demo
 
 open WebSharper
 open WebSharper.JavaScript
-open WebSharper.UI
-open WebSharper.UI.Client
-open WebSharper.UI.Templating
 open WebSharper.Houdini
 
 [<JavaScript>]
-module Client =
-
-    // The templates are loaded from the DOM, so you can edit index.html
-    // and refresh your browser without recompiling, unless you add or remove holes.
-    type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
-
-    let statusMessage = Var.Create "Click the button to register a custom Houdini paint worklet."
-
+module Demo =
     let registerPaintWorklet () =
         promise {
-            try
-                let window = As<Window>(JS.Window)
-                let cssPaintWorklet = window.CSS?paintWorklet
-
-                // Register the worklet
-                do! cssPaintWorklet.AddModule("houdini-paint.js") |> Promise.AsAsync
-
-                statusMessage.Value <- "✅ Houdini Paint Worklet Registered!"
-            with ex ->
-                statusMessage.Value <- $"❌ Error: {ex.Message}"
+            let paintWorklet = JS.Window?CSS?paintWorklet |> As<Worklet>
+            do! paintWorklet.AddModule("paint-worklet.js") |> Promise.AsAsync
+            Console.Log("Paint worklet registered.")
         }
-
-    [<SPAEntryPoint>]
-    let Main () =
-        IndexTemplate.Main()
-            .RegisterHoudini(fun _ ->
-                async {
-                    do! registerPaintWorklet() |> Promise.AsAsync
-                }
-                |> Async.StartImmediate
-            )
-            .Status(statusMessage.V)
-            .Doc()
-        |> Doc.RunById "main"
 ```
 
-## Important Considerations
+The worklet itself is plain JavaScript and calls `registerPaint("striped-background", ...)`. Once registered, the
+CSS property `background: paint(striped-background)` paints the element with the worklet's canvas.
 
-- **Limited Browser Support**: Houdini is still an experimental technology and is not fully supported in all browsers. Check [MDN Houdini API](https://developer.mozilla.org/en-US/docs/Web/Houdini) for compatibility details.
-- **Security Restrictions**: Some Houdini worklets require HTTPS to function correctly.
-- **Performance Considerations**: Worklets run on separate threads, which can improve performance but may introduce complexity.
+## Running the sample
+
+Build the sample in Release and serve its static output:
+
+```bash
+dotnet build WebSharper.Houdini.Sample/WebSharper.Houdini.Sample.fsproj -c Release
+python3 -m http.server -d WebSharper.Houdini.Sample/wwwroot 8099
+```
+
+Open <http://localhost:8099/>. Localhost counts as a secure context, so the paint worklet can be registered. Click
+**Register Houdini** and the striped box should appear.
+
+Alternatively, run the ASP.NET Core host:
+
+```bash
+dotnet run --project WebSharper.Houdini.Sample
+```
+
+## Building from source
+
+### Prerequisites
+
+- [.NET SDK 10](https://dotnet.microsoft.com/download) or later.
+
+### Build
+
+```bash
+dotnet build WebSharper.Houdini.sln -c Release
+```
+
+The binding projects target `netstandard2.0`; the sample targets `net10.0`.
+
+## Deployment
+
+Pushing to `main` triggers `.github/workflows/ghpages.yml`, which builds the sample in Release and publishes
+`WebSharper.Houdini.Sample/wwwroot` to the `gh-pages` branch.
+
+## Repository layout
+
+```
+WebSharper.Houdini/              # binding (WIG definitions)
+  Main.fs
+WebSharper.Houdini.Sample/       # ASP.NET Core SPA demo
+  Client.fs
+  Startup.fs
+  wwwroot/
+    index.html
+    paint-worklet.js
+    site.css
+.github/workflows/ghpages.yml    # build + deploy the sample to GitHub Pages
+```
+
+## Notes on the API
+
+- **Secure context:** paint worklets are only available in secure contexts. Serve the page over HTTPS or from
+  localhost.
+- **Experimental:** Houdini is not Baseline. `CSS.paintWorklet`, `CSS.registerProperty`, and the typed CSSOM
+  classes are not available in every browser.
+- **Worklet files:** the worklet is a separate JavaScript module loaded with `addModule()`. Keep it next to the
+  page or point `addModule()` at an absolute URL.
+- **Custom properties:** `@property` (or `CSS.registerProperty()`) declares the type and inheritance of a custom
+  property so the worklet can read it with `properties.get("--name")`.
+
+## License
+
+Apache 2.0 — see [LICENSE.md](LICENSE.md).
