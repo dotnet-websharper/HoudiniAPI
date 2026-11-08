@@ -1,14 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Houdini CSS Paint API Example</title>
+    <title>WebSharper Houdini CSS Paint API Demo</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234f46e5'/%3E%3Cpath d='M3 11L8 3l5 8z' fill='white'/%3E%3C/svg%3E" />
     <link rel="stylesheet" type="text/css" href="Content/WebSharper.Houdini.Sample.css" />
+    <link rel="stylesheet" type="text/css" href="site.css" />
     <style>
-        /* Don't show the not-yet-loaded templates */
-        [ws-template], [ws-children-template] { display: none; }
-        /* ✅ Load the Houdini worklet */
         @property --stripe-color {
             syntax: "<color>";
             inherits: false;
@@ -19,28 +18,40 @@
             inherits: false;
         }
 
-        body {
-            background: paint(striped-background);
-        }
-
-        .box {
-            margin-top: 15px;
+        .stripe-box {
             width: 200px;
             height: 100px;
+            margin-top: 16px;
+            border-radius: 10px;
             background: paint(striped-background);
-            --stripe-color: rgb(250,128,114);
+            --stripe-color: rgb(250, 128, 114);
             --stripe-width: 15px;
         }
     </style>
     <script type="module" src="Content/WebSharper.Houdini.Sample.head.js"></script>
 </head>
 <body>
-    <h1>Houdini CSS Paint API Example with custom striped background</h1>
-    <div id="main" ws-children-template="Main">
-        <button ws-onclick="RegisterHoudini">Register Houdini</button>
-        <div id="status">${Status}</div>
-        <div class="box"></div>
-    </div>
+    <main class="page">
+        <header class="hero">
+            <h1>Houdini CSS Paint API Demo</h1>
+            <p class="lede">
+                Register a custom paint worklet and use it as a CSS background with the
+                <a href="https://developer.mozilla.org/en-US/docs/Web/Houdini" target="_blank" rel="noreferrer">Houdini API</a>.
+                The page must run in a secure context (HTTPS or localhost).
+            </p>
+        </header>
+
+        <section class="card">
+            <h2>Paint worklet</h2>
+            <p class="hint">Registers <code>paint-worklet.js</code> through <code>CSS.paintWorklet.addModule()</code>.</p>
+            <div class="actions">
+                <button class="btn btn-primary" ws-onclick="registerWorklet">Register Houdini</button>
+            </div>
+            <p class="status" role="status">${status}</p>
+            <p class="registered">Registered: <strong>${registered}</strong></p>
+            <div class="stripe-box"></div>
+        </section>
+    </main>
     <script type="module" src="Content/WebSharper.Houdini.Sample.min.js"></script>
 </body>
 </html>
