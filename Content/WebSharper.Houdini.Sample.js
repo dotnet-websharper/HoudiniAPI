@@ -28,9 +28,9 @@ function registerPaintWorklet(){
         status().Set("Houdini paint worklet registered.");
         return Promise.resolve(null);
       }));
-    })["catch"]((d) => {
-      const a=unwrapExn(d);
-      status().Set("Error: "+a.message);
+    })["catch"]((a) => {
+      const a_1=unwrapExn(a);
+      status().Set("Error: "+a_1.message);
       return Promise.resolve(null);
     }));
   });
@@ -3099,7 +3099,7 @@ class Event extends TemplateHole {
 }
 function Handler(name, callback){
   return Attr.A3((el) => {
-    el.addEventListener(name, (d) =>(callback(el))(d), false);
+    el.addEventListener(name, (o) =>(callback(el))(o), false);
   });
 }
 function OnAfterRender(callback){
@@ -3136,7 +3136,7 @@ function DynamicCustom(set_1, view){
 class Attr {
   static HandlerImpl(event, q){
     return Attr.A3((el) => {
-      el.addEventListener(event, (d) =>(q(el))(d), false);
+      el.addEventListener(event, (o) =>(q(el))(o), false);
     });
   }
   static Concat(xs){
